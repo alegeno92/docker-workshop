@@ -1,10 +1,4 @@
-# ARM AIoT Dev Summit 
-## Containers in an Iot World - How Docker can make it easier to deploy your application on an edge device
-##### Maurizio Caporali maurizio.caporali@seco.com Alessandro Genovese alessandro.genovese@seco.com 
-
-## Software required on the host machine
-
-## Requirements
+# Requirements
 
 ### Hardware 
 Laptop with:
@@ -25,14 +19,17 @@ Laptop with:
   
  #### Windows 
   - OS: Windows 10 Pro or Enterprise
-  - Docker Desktop
+  - Docker Desktop [guide](https://docs.docker.com/docker-for-windows/install/)
   - Putty
   - git
-  - IDE
+  - IDE (e.g. VSCode, Jetbrains Suite)
 
  #### MAC OSX
-  - OS: > 10
-
+  - OS: Mohave or latest
+  - Docker Desktop [guide](https://docs.docker.com/docker-for-mac/install/)
+  - git
+  - IDE (e.g. VSCode, Jetbrains Suite)
+  
 ## Other Requirements:
   - Account on [AdafruitIO](https://io.adafruit.com/) - https://accounts.adafruit.com/users/sign_in
-  - Account on [DockerHUB](https://hub.docker.com/) - https://hub.docker.com/signup
+  - Account on [DockerHub](https://hub.docker.com/) - https://hub.docker.com/signup

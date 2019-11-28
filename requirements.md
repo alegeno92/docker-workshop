@@ -12,6 +12,7 @@ Laptop with:
   #### Linux (recommended):
   - OS: amd64 Linux (e.g. Ubuntu) distribution with kernel version 3.10 or later
   - Docker [guide](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+  - Docker BuildX 
   - Docker Compose [guide](https://docs.docker.com/compose/install/)
   - Minicom or Screen (optional, but recommended)
   - git
@@ -20,6 +21,7 @@ Laptop with:
  #### Windows 
   - OS: Windows 10 Pro or Enterprise
   - Docker Desktop [guide](https://docs.docker.com/docker-for-windows/install/)
+  - Docker BuildX 
   - Putty
   - git
   - IDE (e.g. VSCode, Jetbrains Suite)
@@ -27,7 +29,7 @@ Laptop with:
  #### MAC OSX
   - OS: Mohave or latest
   - Docker Desktop [guide](https://docs.docker.com/docker-for-mac/install/)
-  - git
+  - git (need to install Xcode [tutorial](https://stackoverflow.com/questions/58280652/git-doesnt-work-on-macos-catalina-xcrun-error-invalid-active-developer-path))
   - IDE (e.g. VSCode, Jetbrains Suite)
   
 ## Other Requirements:

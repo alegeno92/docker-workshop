@@ -16,6 +16,7 @@ Laptop with:
   - Docker Compose [guide](https://docs.docker.com/compose/install/)
   - Minicom or Screen (optional, but recommended)
   - git
+  - qemu (sudo apt install qemu [debian based distro])
   - IDE (e.g. VSCode, Jetbrains Suite)
   
  #### Windows 

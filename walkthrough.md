@@ -1,15 +1,23 @@
 # Docker Workshop walkthrough
 
-## Hands On 0 - UDOO Neo SSH Connection
+## Hands On 0 - UDOO Neo startup
+#### Laptop
+Download the UDOO NEO image from this link:  
+[UDOO NEO Image UDOObuntu 18.04](https://s3.eu-central-1.amazonaws.com/download.udoo/UDOO_NEO/UDOObuntu/udoobuntu-udoo_neo-18.04_20191125-1252.img.tgz)  
+*sha1sum: 714CDA548A8C772ADE7795F9AA6FBECFD696E977*  
+On Linux or macOS you can extract the image running this command:  
+`tar -xvzf /path/to/udoobuntu-udoo_neo-18.04_20191125-1252.img.tgz`
+
+
 #### UDOO Neo
-How to connect the UDOO NEO to the laptop.<br>
+How to connect the UDOO NEO to the laptop.  
 Follow the [tutorial](https://github.com/alegeno92/docker-workshop/blob/master/SSH_connection.md)
 
 
-## Hands On 1 - Check the environment 
+## Hands On 1 - Check the environment
 #### UDOO Neo & Laptop
-Check that the docker and docker-compose are installed both locally and on the board. <br>
-``` bash 
+Check that the docker and docker-compose are installed both locally and on the board.
+``` bash
 docker --version
 docker-compose --version
 ```
@@ -17,27 +25,27 @@ docker-compose --version
 
 ## Hands On 2 - Dockerizing the first application (python)
 #### Laptop
-1. [Develop] 
-   - Clone the cloud connector app from Github. 
+1. [Develop]
+   - Clone the cloud connector app from Github.
     ``` bash  
-        git clone https://github.com/alegeno92/cloud-connector.git 
+        git clone https://github.com/alegeno92/cloud-connector.git
         cd cloud-connector
     ```
     - Register to Adafruit IO cloud
     - Generate new Auth Token
     - Fill the AIO key in the config.json file (in order to data online)
     - Set ``"mock_client": true`` to disable the MQTT Local Client
-2. [Dockerfile] 
+2. [Dockerfile]
     - Go to the project directory
     - Create a backup of the existing Dockerfile
-    - Create a new Dockerfile 
+    - Create a new Dockerfile
     -  fill it with:
-        ``` Dockerfile 
+        ``` Dockerfile
         FROM python:3-alpine
-        RUN pip install --no-cache-dir paho-mqtt adafruit-io 
-        RUN mkdir /app 
-        WORKDIR /app 
-        COPY *.py /app/ 
+        RUN pip install --no-cache-dir paho-mqtt adafruit-io
+        RUN mkdir /app
+        WORKDIR /app
+        COPY *.py /app/
         CMD ["python", "-u", "/app/main.py" , "/config/config.json"]
         ```
 3. [Build]
@@ -47,29 +55,29 @@ docker-compose --version
     ```
    - At the end check if everithing works
 
-   ```bash 
+   ```bash
         docker image ls
     ```
 
 4. [Run]
-   - ```bash 
-        docker run -v `pwd`:/config --network=host cloud-connector 
+   - ```bash
+        docker run -v `pwd`:/config --network=host cloud-connector
      ```
 
-## Hands On 3 - Dockerizing the more complex app (C++) 
+## Hands On 3 - Dockerizing the more complex app (C++)
 #### Laptop
-1. [Develop] 
+1. [Develop]
    - Clone the cloud connector app from Github.
-```bash 
-    git clone https://github.com/alegeno92/agent.git 
+```bash
+    git clone https://github.com/alegeno92/agent.git
     cd agent
 ```
-1. [Dockerfile] 
+1. [Dockerfile]
     - Go to the project directory
     - Create a backup of the existing Dockerfile
-    - Create a new Dockerfile 
+    - Create a new Dockerfile
     -  fill it with:
-        ``` Dockerfile 
+        ``` Dockerfile
         FROM alpine:latest AS paho-c
         RUN apk add --no-cache cmake g++ make
         RUN apk add --no-cache git libressl-dev
@@ -78,7 +86,7 @@ docker-compose --version
         RUN git checkout v1.3.1
         RUN cmake -Bbuild -H. -DPAHO_WITH_SSL=ON -DPAHO_ENABLE_TESTING=OFF
         RUN cmake --build build/ --target install
-        
+
         FROM paho-c AS paho-cpp
         WORKDIR /
         RUN apk add --no-cache git libressl-dev
@@ -87,7 +95,7 @@ docker-compose --version
         WORKDIR paho.mqtt.cpp
         RUN cmake -Bbuild -H. -DPAHO_BUILD_DOCUMENTATION=FALSE -DPAHO_BUILD_SAMPLES=FALSE
         RUN cmake --build build/ --target install
-        
+
         FROM paho-cpp AS build-container
         RUN apk add --no-cache zlib-dev
         COPY . /home/agent
@@ -98,7 +106,7 @@ docker-compose --version
         RUN cmake --build . --target agent --
 
 
-        
+
         FROM alpine:latest
         RUN apk add --no-cache zlib libressl libstdc++
         COPY --from=build-container /paho.mqtt.c/build/src/* /usr/lib/
@@ -107,33 +115,33 @@ docker-compose --version
         CMD ["/agent", "/config/config.json"]
         ```
 2. [Build]
-   - Launch 
-   ```bash 
+   - Launch
+   ```bash
    docker build . -t agent
    ```
    - At the end check if everithing works
-   ```bash 
+   ```bash
    docker image ls
    ```
 
 3. [Run]
-  ```bash 
+  ```bash
   docker run -v `pwd`:/config --network=host agent
   ```
 
 
-## Hands On 4 - Docker BuildX 
+## Hands On 4 - Docker BuildX
 #### Laptop
 1. create a new builder
   ```bash
   docker buildx create --name arm_builder
   ```
-2. bootstrap the builder 
+2. bootstrap the builder
 ```bash
 docker buildx inspect --bootstrap
 ```
-3. Use the builder 
-```bash 
+3. Use the builder
+```bash
 docker buildx use arm_builder
 ```
 
@@ -143,29 +151,29 @@ docker buildx build -t alegeno92/server --platform linux/arm64,linux/arm/v7 --lo
 ```
 
 ## Hands On 5 - DockerHub
-#### Laptop 
+#### Laptop
 1. Create an account on DockerHub
-2. Login to DockerHub via CLI 
+2. Login to DockerHub via CLI
 ```bash
 docker login
 ```
 
 ## Hands On 6 - DockerHub & BuildX
-#### Laptop 
-1. Build the agent for different platforms and push the results on DockerHub 
+#### Laptop
+1. Build the agent for different platforms and push the results on DockerHub
 ```bash
 docker buildx build -t alegeno92/agent --platform linux/amd64,linux/arm/v7 --push .
 ```
 
 
-## Hands On 7 - Docker Compose 
+## Hands On 7 - Docker Compose
 #### Laptop
 1. Clone the cloud connector app from Github.
-```bash 
-git clone https://github.com/alegeno92/compose.git 
+```bash
+git clone https://github.com/alegeno92/compose.git
 cd compose
 ```
-2. Create a backup copy 
+2. Create a backup copy
 ```bash
       mv docker-compose.yaml docker-compose.yaml.bk
 ```
@@ -228,7 +236,7 @@ cd compose
             - PYTHONUNBUFFERED=1
    ```
 4. compress the directory to copy it on the board
-```bash 
+```bash
 cd ..
 tar cvf compose.tgz compose/
 ```
@@ -240,13 +248,13 @@ tar cvf compose.tgz compose/
 password: udooer
 #### UDOO Neo
 6. connect to the board via ssh
-```bash 
+```bash
     ssh udooer@192.168.7.2
 ```
 password: udooer
 
 7. extract the archive and enter
-```bash 
+```bash
 tar xvf compose.tgz
 cd compose
 ```

@@ -49,11 +49,13 @@
 
 - Now you need to configure the IP Address of the network created.  
 Go to **Start** -> **Settings** -> **Network & Internet** and click on **Change adapter options** on the middle of the page. The Network Connections page appears with the list of your network adapters.
+<img style="width:500px; margin-left: 50px;" src="img/wd_06.jpg"></br>
 
 - Right-click the new connection adapters appeared and select **Properties**. Select the **Internet Protocol Version 4(TCP/IPv4)** and **Properties**.
 
 - Select **Use the following IP address** and set
   * IP address: `192.168.7.1`
-  * Subnet mask: `255.255.255.0`
+  * Subnet mask: `255.255.255.0`  
+<img style="width:300px;" src="img/wd_07.jpg"></br>
 
 - Save the options and you can now check the connection with a ping to the UDOO NEO address: `ping 192.172.7.2`
